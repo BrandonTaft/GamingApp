@@ -13,7 +13,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>HI</h1>
+        <h1>HI There</h1>
         <p>{!data ? "Loading..." : data}</p>
       </header>
     </div>
