@@ -1,0 +1,17 @@
+{
+  "development": {
+    "username": "asbapbzq",
+    "password": "MIashZPrGd-YgV7ljodcaT4vBmLwqa-S",
+    "database": "asbapbzq",
+    "host": "chunee.db.elephantsql.com",
+    "dialect": "postgres",
+    "logging": "postgres"
+  },
+  "production": {
+    "username": "asbapbzq",
+    "password": "MIashZPrGd-YgV7ljodcaT4vBmLwqa-S",
+    "database": "asbapbzq",
+    "host": "chunee.db.elephantsql.com",
+    "dialect": "postgres"
+  }
+}
