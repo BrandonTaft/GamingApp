@@ -10,7 +10,7 @@ app.use(express.static(path.resolve(__dirname, './client/build')));
 // app.use(express.static(path.resolve(__dirname, './client')));
 
 app.get("/api", (req, res) => {
-  res.json({ message: "Hi There!" });
+  res.json({ message: "Hi There yo!" });
 });
 
 //***************************REGISTRATION PAGE***************************//
