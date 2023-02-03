@@ -4,8 +4,7 @@
     "password": "MIashZPrGd-YgV7ljodcaT4vBmLwqa-S",
     "database": "asbapbzq",
     "host": "chunee.db.elephantsql.com",
-    "dialect": "postgres",
-    "logging": "postgres"
+    "dialect": "postgres"
   },
   "production": {
     "username": "asbapbzq",

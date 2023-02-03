@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "../App.css"
 
 
 function Register(props) {
-
+    const navigate = useNavigate();
     const [user, setUser] = useState({})
     const [message, setMessage] = useState('')
     const handleRegisterChange = (e) => {
@@ -13,15 +13,8 @@ function Register(props) {
             [e.target.name]: e.target.value
         })
     }
-    let showButton;
-    let passwordMessage;
-    if(user.password !== user.passwordCopy){
-        passwordMessage = "Passwords Must Match"
-        showButton = "turn-off-button"
-    }else{
-        showButton = ""
-    }
     const handleRegisterButton = () => {
+        console.log(user)
         fetch('/api/register', {
             method: 'POST',
             headers: {
@@ -31,7 +24,7 @@ function Register(props) {
         }).then(response => response.json())
             .then(result => {
                 if (result.success) {
-                    props.history.push('/')
+                    navigate('/')
                 }
                 else {
                     setMessage(result.message)
@@ -48,8 +41,15 @@ function Register(props) {
                 <input className="textbox" type="text" name="name" onChange={handleRegisterChange} placeholder="*Enter Desired User name" />
                 <input className="textbox" type="password" name="password" onChange={handleRegisterChange} placeholder="*Enter Desired Password" />
                 <input className="textbox" type="password" name="passwordCopy" onChange={handleRegisterChange} placeholder="*Re-Enter Desired Password" />
-                <span className='highlight password-message'>{passwordMessage}</span>
-                <button id="register-button" className={`btn mb-1 ${showButton}`} onClick={handleRegisterButton}>SUBMIT</button>
+                {user.password !== user.passwordCopy
+                    ?
+                    <>
+                    <span className='highlight password-message'>Passwords Must Match</span>
+                    <button disabled>SUBMIT</button>
+                    </>
+                    :
+                    <button onClick={handleRegisterButton}>SUBMIT</button>
+                }
                 <NavLink to="/" className='highlight'>Back To Login</NavLink>
             </div>
         </div>

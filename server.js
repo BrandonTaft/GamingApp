@@ -1,21 +1,26 @@
 const path = require('path');
 const express = require('express');
+const app = express();
 const sequelize = require('sequelize');
 const models = require('./models');
 const bcrypt = require('bcryptjs');
+const salt = 10;
+const bodyParser = require('body-parser');
+app.use(express.json({ limit: 52428800 }));
 const PORT = process.env.PORT || 3001;
 
-const app = express();
+
 app.use(express.static(path.resolve(__dirname, './client/build')));
 // app.use(express.static(path.resolve(__dirname, './client')));
-
+app.use(bodyParser.urlencoded({ extended: false })) 
 app.get("/api", (req, res) => {
-  res.json({ message: "Hi There yo!" });
+  res.json({ message: "Hi There!" });
 });
 
 //***************************REGISTRATION PAGE***************************//
 
 app.post('/api/register', async (req, res) => {
+    console.log(req.body)
   const name = req.body.name
   const password = req.body.password
   const persistedUser = await models.Users.findOne({
