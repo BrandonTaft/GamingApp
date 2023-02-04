@@ -52,6 +52,35 @@ app.post('/api/register', async (req, res) => {
   }
 })
 
+//***************************LOGIN PAGE***************************//
+
+app.post('/api/login', async (req, res) => {
+    const name = req.body.name
+    const password = req.body.password
+    let user = await models.Users.findOne({
+        where: sequelize.where(
+            sequelize.fn('lower', sequelize.col('name')),
+            sequelize.fn('lower', name)
+        )
+    })
+    if (user != null) {
+        bcrypt.compare(password, user.password, (error, result) => {
+            if (result) {
+                models.Users.update(
+                    { isLoggedIn: true },
+                    { where: { id: user.id } }
+                )
+                const token = jwt.sign({ id: user.id }, "SECRETKEY")
+                res.json({ success: true, token: token, user: user })
+            } else {
+                res.json({ success: false, message: 'Not Authenticated' })
+            }
+        })
+    } else {
+        res.json({ message: "Username Incorrect" })
+    }
+})
+
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 //   res.sendFile(path.resolve(__dirname, './client/', 'index.html'));

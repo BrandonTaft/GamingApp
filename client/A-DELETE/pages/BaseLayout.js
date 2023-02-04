@@ -1,7 +1,7 @@
 import useLocalStorage from 'use-local-storage';
 import { useLocation } from "react-router-dom";
-import Navbar from './Navbar';
-import Footer from './Footer';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 
 function BaseLayout(props) {
