@@ -4,13 +4,14 @@ const app = express();
 const sequelize = require('sequelize');
 const models = require('./models');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const salt = 10;
 const bodyParser = require('body-parser');
 app.use(express.json({ limit: 52428800 }));
 const PORT = process.env.PORT || 3001;
 
 
-app.use(express.static(path.resolve(__dirname, './client/build')));
+// app.use(express.static(path.resolve(__dirname, './client/build')));
 app.use(bodyParser.urlencoded({ extended: false })) 
 app.get("/api", (req, res) => {
   res.json({ message: "Hi There!" });

@@ -8,39 +8,42 @@ import Login from "./routes/login";
 import PublicPage from "./routes/public-page";
 import PrivateRoutes from "./routes/auth";
 import ProfilePage from "./routes/profile-page";
+import Register from "./routes/register";
+import { gameLoader } from "./loaders/loaders";
 
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Layout/>,
+    element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "feed",
+        path: "/",
         element: <PublicPage />,
+        loader: gameLoader,
+      },
+      {
+        element: <PrivateRoutes />,
+        children: [
+          {
+            path: "profile",
+            element: <ProfilePage />
+          }
+        ],
       },
     ],
   },
   {
     path: "login",
-    element: <Login/>,
-    errorElement: <ErrorPage />,
+    element: <Login />,
+    errorElement: <ErrorPage />
   },
   {
-    element: <PrivateRoutes/>,
-    children: [
-      {
-        element: <Layout/>,
-        children: [
-          {
-            path: "profile",
-            element: <ProfilePage />,
-      },
-    ],
-    }
-    ],
-  },
+    path: "register",
+    element: <Register />,
+     errorElement: <ErrorPage />
+  }
+
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

@@ -1,9 +1,10 @@
-import { Outlet, Navigate } from 'react-router-dom'
+import { Outlet, Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const PrivateRoutes = () => {
-    let auth = {'token':false}
+    let auth = Cookies.get('token')
     return(
-        auth.token ? <Outlet/> : <Navigate to="/login"/>
+        auth ? <Outlet/> : <Navigate to="/login"/>
     )
 }
 
