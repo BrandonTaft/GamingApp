@@ -20,7 +20,10 @@
 //   }
   
   async function getGames() {
-    console.log("getGames ran")
+    
+    if( localStorage.getItem('loaded') !== "true" ) {
+        console.log(localStorage.getItem('loaded'))
+        console.log("getGames ran")
     const key = "79bd694890ab47a795909bf5e8d434e9"
     const url = `https://rawg-video-games-database.p.rapidapi.com/games?key=${key}`;
     const options = {
@@ -31,12 +34,14 @@
         }
     };
     let response = await fetch(url, options);
-    
+
     return response.json()
+    }
 }
 
 export async function gameLoader() {
     console.log("loader ran")
+    localStorage.setItem('loaded', "true")
     const games = await getGames();
     return { games };
   }
