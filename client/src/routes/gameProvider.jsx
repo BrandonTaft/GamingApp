@@ -2,11 +2,10 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 export default function GameProvider() {
-    const [games, setGames] = useState([]);
+    const [games, setGames] = useState();
 
     useEffect(() => {
         const fetchGames = async () => {
-            console.log("RAN")
             const key = "79bd694890ab47a795909bf5e8d434e9"
             const url = `https://rawg-video-games-database.p.rapidapi.com/games?key=${key}`;
             const options = {
@@ -19,7 +18,8 @@ export default function GameProvider() {
             const response = await fetch(
                 url, options
             );
-            const games = await response.json();
+            const result = await response.json();
+            const games = result.results
             setGames(games);
         }
         fetchGames();
@@ -27,7 +27,7 @@ export default function GameProvider() {
 
     return (
         <div>
-            <Outlet context={[games, setGames]} />;
+            <Outlet context={[games, setGames]} />
         </div>
     );
 }

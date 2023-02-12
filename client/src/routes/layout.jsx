@@ -36,8 +36,8 @@ export default function Layout() {
   return (
     <div>
       <Navbar />
-      <Outlet context={[games, setGames]} />;
+      <Outlet context={[games, setGames]} />
       <Footer />
     </div>
-  );
+  )
 }
