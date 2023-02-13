@@ -7,15 +7,18 @@ export default function SearchBar({games}) {
     const [suggestion, setSuggestion] = useState([]);
     const trie = new Trie();
     
-
-    const dictionary = {
-        words: ['hello','helium','world','car','carpet','test','this','that','those','working','is']
-      }
-        const words = dictionary.words;
-        for (let i = 0; i < words.length; i++) {
-            const word = words[i];
-            trie.insert(word)
-        }      
+   
+            if(games){
+            for(let i = 0; i < games.length; i++) {
+             const game = games[i].name
+             trie.insert(game)
+            }
+         }
+        
+        
+   
+   
+        
 
     const handleKeyDown = () => {
         
@@ -25,8 +28,9 @@ export default function SearchBar({games}) {
     
     const handlePrefix = (e) => {
     setPrefix( e.target.value )
+    console.log(e.target.value)
      setSuggestion(trie.find(e.target.value))
-     console.log("trie", trie.find(e.target.value))
+     console.log("trie", suggestion)
     }
 
     // console.log(prefix)
