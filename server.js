@@ -96,7 +96,6 @@ app.get('/api/games', async (req,res) => {
         }
     
         const getGames = async() => {
-            const data = "fields name; limit 10;"
                const authToken = await fetchTwitchAuth()
                console.log("AUTH", authToken)
                fetch('https://api.igdb.com/v4/games', {

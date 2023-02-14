@@ -1,151 +1,309 @@
 
-  // TrieNode
-  function TrieNode(letter) {
-    // the "letter" value will be the character in sequence
-    this.letter = letter;
-    
-    // keep a reference to previousLetter
-    this.previousLetter = null;
-    
-    // create hash of nextLetters
-    this.nextLetters = {};
-    
+//   // TrieNode
+//   class TrieNode {
+//   constructor(letter) {
+//     // the "letter" value will be the character in sequence
+//     this.letter = letter;
+
+//     // keep a reference to previousLetter
+//     this.previousLetter = null;
+
+//     // create hash of nextLetters
+//     this.nextLetters = {};
+
+//     // check to see if the node is at the end
+//     this.end = false;
+
+//     this.getWord = function () {
+//       let output = [];
+//       let node = this;
+
+//       while (node !== null) {
+//         output.unshift(node.letter);
+//         node = node.previousLetter;
+//       }
+
+//       return output.join('');
+//     };
+//   }
+// }
+  
+//   export class Trie {
+//   constructor() {
+//     this.root = new TrieNode(null);
+//     // inserts a word into the trie.
+//     this.insert = function (word) {
+//       // start at the root
+//       let node = this.root;
+//       // for every character in the word
+//       for (let i = 0; i < word.length; i++) {
+//         // check to see if character node exists in nextLetters.
+//         if (!node.nextLetters[word[i]]) {
+//           // if it doesn't exist, then create it.
+//           node.nextLetters[word[i]] = new TrieNode(word[i]);
+
+//           // also assign the previousLetter to the child node.
+//           node.nextLetters[word[i]].previousLetter = node;
+//         }
+
+//         // proceed to the next depth in the trie.
+//         node = node.nextLetters[word[i]];
+
+//         // finally, check to see if it's the last word.
+//         if (i == word.length - 1) {
+//           // if it is, set the end flag to true.
+//           node.end = true;
+//         }
+//       }
+//     };
+
+//     // check if it contains a whole word.
+//     this.contains = function (word) {
+//       let node = this.root;
+
+//       // for every character in the word
+//       for (let i = 0; i < word.length; i++) {
+//         // check to see if character node exists in nextLetters.
+//         if (node.nextLetters[word[i]]) {
+//           // if it exists, proceed to the next depth of the trie.
+//           node = node.nextLetters[word[i]];
+//         } else {
+//           // doesn't exist, return false since it's not a valid word.
+//           return false;
+//         }
+//       }
+
+//       // finished going through all the words
+//       return node.end;
+//     };
+
+//     // returns every word with given prefix
+//     this.find = function (prefix) {
+//       let node = this.root;
+//       let output = [];
+//       // for every character in the prefix
+//       for (let i = 0; i < prefix.length; i++) {
+//         // make sure prefix actually has words
+//         if (node.nextLetters[prefix[i]]) {
+//           node = node.nextLetters[prefix[i]];
+//         } else {
+//           // if there's then none return it.
+//           return output;
+//         }
+//       }
+
+//       // recursively find all words in the node
+//       findAllWords(node, output);
+
+//       return output;
+//     };
+
+//     // recursive function to find all words in the given node.
+//     const findAllWords = (node, arr) => {
+//       // base case, if node is at a word, push to output
+//       if (node.end) {
+//         arr.unshift(node.getWord());
+//       }
+
+//       // iterate through each nextLetters, call recursive findAllWords
+//       for (let child in node.nextLetters) {
+//         findAllWords(node.nextLetters[child], arr);
+//       }
+//     };
+
+//     // removes the given word
+//     this.remove = function (word) {
+//       let root = this.root;
+
+//       if (!word)
+//         return;
+
+//       // recursively finds and removes a word
+//       const removeWord = (node, word) => {
+
+//         // check if current node contains the word
+//         if (node.end && node.getWord() === word) {
+
+//           // check and see if node has nextLetters
+//           let hasnextLetters = Object.letters(node.nextLetters).length > 0;
+
+//           // if has nextLetters just un-flag the end node that marks end of a word.
+//           // so it doesn't remove words that contain/include supplied word
+//           if (hasnextLetters) {
+//             node.end = false;
+//           } else {
+//             // remove word by getting previousLetter and setting nextLetters to empty dictionary
+//             node.previousLetter.nextLetters = {};
+//           }
+
+//           return true;
+//         }
+
+//         // recursively remove word from all nextLetters
+//         for (let letter in node.nextLetters) {
+//           removeWord(node.nextLetters[letter], word);
+//         }
+
+//         return false;
+//       };
+
+//       // call remove word on root node
+//       removeWord(root, word);
+//     };
+//   }
+// }
+
+class TrieNode {
+  constructor(key) {
+    // the "key" value will be the character in sequence
+    this.key = key;
+
+    // we keep a reference to parent
+    this.parent = null;
+
+    // we have hash of children
+    this.children = {};
+
     // check to see if the node is at the end
     this.end = false;
-    
-    this.getWord = function() {
+
+    this.getWord = function () {
       let output = [];
       let node = this;
-  
+
       while (node !== null) {
-        output.unshift(node.letter);
-        node = node.previousLetter;
+        output.unshift(node.key);
+        node = node.parent;
       }
-  
+
       return output.join('');
     };
   }
-  
-  export default function Trie() {
+}
+
+export class Trie {
+  constructor() {
     this.root = new TrieNode(null);
     // inserts a word into the trie.
-  this.insert = function(word) {
-    // start at the root
-    let node = this.root; 
-    // for every character in the word
-    for(let i = 0; i < word.length; i++) {
-      // check to see if character node exists in nextLetters.
-      if (!node.nextLetters[word[i]]) {
-        // if it doesn't exist, then create it.
-        node.nextLetters[word[i]] = new TrieNode(word[i]);
+    this.insert = function (word) {
+      let node = this.root; // we start at the root
 
-        // also assign the previousLetter to the child node.
-        node.nextLetters[word[i]].previousLetter = node;
+      // for every character in the word
+      for (let i = 0; i < word.length; i++) {
+        // check to see if character node exists in children.
+        if (!node.children[word[i]]) {
+          // if it doesn't exist, we then create it.
+          node.children[word[i]] = new TrieNode(word[i]);
+
+          // we also assign the parent to the child node.
+          node.children[word[i]].parent = node;
+        }
+
+        // proceed to the next depth in the trie.
+        node = node.children[word[i]];
+
+        // finally, we check to see if it's the last word.
+        if (i == word.length - 1) {
+          // if it is, we set the end flag to true.
+          node.end = true;
+        }
+      }
+    };
+
+    // check if it contains a whole word.
+    this.contains = function (word) {
+      let node = this.root;
+
+      // for every character in the word
+      for (let i = 0; i < word.length; i++) {
+        // check to see if character node exists in children.
+        if (node.children[word[i]]) {
+          // if it exists, proceed to the next depth of the trie.
+          node = node.children[word[i]];
+        } else {
+          // doesn't exist, return false since it's not a valid word.
+          return false;
+        }
       }
 
-      // proceed to the next depth in the trie.
-      node = node.nextLetters[word[i]];
-
-      // finally, check to see if it's the last word.
-      if (i == word.length-1) {
-        // if it is, set the end flag to true.
-        node.end = true;
-      }
-    }
-  };
-
-   // check if it contains a whole word.
-   this.contains = function(word) {
-    let node = this.root;
-
-    // for every character in the word
-    for(let i = 0; i < word.length; i++) {
-      // check to see if character node exists in nextLetters.
-      if (node.nextLetters[word[i]]) {
-        // if it exists, proceed to the next depth of the trie.
-        node = node.nextLetters[word[i]];
-      } else {
-        // doesn't exist, return false since it's not a valid word.
-        return false;
-      }
-    }
-
-    // finished going through all the words
-    return node.end;
-  };
+      // we finished going through all the words, but is it a whole word?
+      return node.end;
+    };
 
     // returns every word with given prefix
-    this.find = function(prefix) {
-        let node = this.root;
-        let output = [];
-    
-        // for every character in the prefix
-        for(let i = 0; i < prefix.length; i++) {
-          // make sure prefix actually has words
-          if (node.nextLetters[prefix[i]]) {
-            node = node.nextLetters[prefix[i]];
-          } else {
-            // if there's then none return it.
-            return output;
-          }
-        }
-    
-        // recursively find all words in the node
-        findAllWords(node, output);
-    
-        return output;
-      };
-      
-      // recursive function to find all words in the given node.
-      const findAllWords = (node, arr) => {
-        // base case, if node is at a word, push to output
-        if (node.end) {
-          arr.unshift(node.getWord());
-        }
-    
-        // iterate through each nextLetters, call recursive findAllWords
-        for (let child in node.nextLetters) {
-          findAllWords(node.nextLetters[child], arr);
+    this.find = function (prefix) {
+      let node = this.root;
+      let output = [];
+
+      // for every character in the prefix
+      for (let i = 0; i < prefix.length; i++) {
+        // make sure prefix actually has words
+        if (node.children[prefix[i]]) {
+          node = node.children[prefix[i]];
+        } else {
+          // there's none. just return it.
+          return output;
         }
       }
 
-      // removes the given word
-this.remove = function (word) {
-    let root = this.root;
+      // recursively find all words in the node
+      findAllWords(node, output);
 
-    if(!word) return;
+      return output;
+    };
 
-    // recursively finds and removes a word
-    const removeWord = (node, word) => {
+    // recursive function to find all words in the given node.
+    const findAllWords = (node, arr) => {
+      // base case, if node is at a word, push to output
+      if (node.end) {
+        arr.unshift(node.getWord());
+      }
+
+      // iterate through each children, call recursive findAllWords
+      for (let child in node.children) {
+        findAllWords(node.children[child], arr);
+      }
+    };
+
+    // removes the given word
+    this.remove = function (word) {
+      let root = this.root;
+
+      if (!word)
+        return;
+
+      // recursively finds and removes a word
+      const removeWord = (node, word) => {
 
         // check if current node contains the word
         if (node.end && node.getWord() === word) {
 
-            // check and see if node has nextLetters
-            let hasnextLetters = Object.letters(node.nextLetters).length > 0;
+          // check and see if node has children
+          let hasChildren = Object.keys(node.children).length > 0;
 
-            // if has nextLetters just un-flag the end node that marks end of a word.
-            // so it doesn't remove words that contain/include supplied word
-            if (hasnextLetters) {
-                node.end = false;
-            } else {
-                // remove word by getting previousLetter and setting nextLetters to empty dictionary
-                node.previousLetter.nextLetters = {};
-            }
+          // if has children we only want to un-flag the end node that marks end of a word.
+          // this way we do not remove words that contain/include supplied word
+          if (hasChildren) {
+            node.end = false;
+          } else {
+            // remove word by getting parent and setting children to empty dictionary
+            node.parent.children = {};
+          }
 
-            return true;
+          return true;
         }
 
-        // recursively remove word from all nextLetters
-        for (let letter in node.nextLetters) {
-            removeWord(node.nextLetters[letter], word)
+        // recursively remove word from all children
+        for (let key in node.children) {
+          removeWord(node.children[key], word);
         }
 
-        return false
+        return false;
+      };
+
+      // call remove word on root node
+      removeWord(root, word);
     };
-
-    // call remove word on root node
-    removeWord(root, word);
-};
   }
+}
 
