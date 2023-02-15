@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./style/index.css";
+import "./style/App.css";
 import Layout from "./routes/layout";
 import ErrorPage from "./routes/error-page";
 import GameProvider from "./routes/gameProvider";
