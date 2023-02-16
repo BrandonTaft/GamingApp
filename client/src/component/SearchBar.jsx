@@ -5,6 +5,7 @@ import '../style/App.css'
 export default function SearchBar({ games }) {
   const [trie, setTrie] = useState();
   const [suggestedWords, setSuggestedWords] = useState([]);
+  const [screenshot, setScreenshot] = useState("")
   const inserted = useRef(0);
   const cursor = useRef(0);
 
@@ -14,7 +15,7 @@ export default function SearchBar({ games }) {
   }, [])
 
   async function createTree() {
-    console.log("ran")
+    console.log("ran",games)
     for (let i = 0; i < games.length; i++) {
       const game = games[i].name
       trie.insert(game)
@@ -28,6 +29,7 @@ export default function SearchBar({ games }) {
   }
 
   const handlePrefix = (e) => {
+    console.log(trie)
     cursor.current = 0
     const prefix = e.target.value
     if (prefix.length > 0) {
@@ -47,6 +49,14 @@ export default function SearchBar({ games }) {
       cursor.current--
       document.getElementById(`suggested-word-${cursor.current}`).style.backgroundColor = "blue"
       document.getElementById(`suggested-word-${cursor.current + 1}`).style.backgroundColor = "white"
+    }
+    if (e.keyCode === 13 && cursor.current >= 0) {
+      const selectedGame = document.getElementById(`suggested-word-${cursor.current}`)
+      setSuggestedWords([])
+      if(selectedGame){
+      e.target.value = selectedGame.innerHTML.valueOf()
+      setScreenshot(games[31].short_screenshots[1].image)
+      }
     }
   }
 
@@ -72,6 +82,7 @@ export default function SearchBar({ games }) {
       <div className="search-list">
         {suggestedWordList}
       </div>
+      <img src={screenshot}/>
     </div>
   )
 }

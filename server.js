@@ -105,7 +105,7 @@ app.get('/api/games', async (req,res) => {
                     'Authorization': `Bearer ${authToken}`,
                 },
                 
-                body:'fields name; limit 100;'
+                body:'fields name, screenshots; limit 100;'
               })
               .then(response => response.json())
               .then(result => {res.json(result)})

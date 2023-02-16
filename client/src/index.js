@@ -11,7 +11,6 @@ import PrivateRoutes from "./routes/auth";
 import ProfilePage from "./routes/profile-page";
 import Register from "./routes/register";
 import Chat from "./routes/chat";
-import { gameLoader } from "./loaders/loaders";
 
 
 const router = createBrowserRouter([
