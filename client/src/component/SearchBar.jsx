@@ -4,32 +4,27 @@ import '../style/App.css'
 
 export default function SearchBar({ games }) {
   const [trie, setTrie] = useState();
+  const [cached, setCached] = useState(false)
   const [suggestedWords, setSuggestedWords] = useState([]);
   const [screenshot, setScreenshot] = useState("")
-  const inserted = useRef(0);
   const cursor = useRef(0);
 
 
   useEffect(() => {
     setTrie(new Trie)
+    setCached(false)
   }, [])
 
-  async function createTree() {
-    console.log("ran",games)
+  //If the Node hasnt been initialized yet and once the games prop is loaded
+  if (games && !cached && trie) {
     for (let i = 0; i < games.length; i++) {
       const game = games[i].name
       trie.insert(game)
     }
-  }
-
-  //If the Node hasnt been initialized yet and once the games prop is loaded
-  if (games && inserted.current === 0) {
-    inserted.current = inserted.current + 1
-    createTree()
+    setCached(true)
   }
 
   const handlePrefix = (e) => {
-    console.log(trie)
     cursor.current = 0
     const prefix = e.target.value
     if (prefix.length > 0) {
@@ -55,7 +50,7 @@ export default function SearchBar({ games }) {
       setSuggestedWords([])
       if(selectedGame){
       e.target.value = selectedGame.innerHTML.valueOf()
-      setScreenshot(games[31].short_screenshots[1].image)
+      setScreenshot(games[1].background_image)
       }
     }
   }

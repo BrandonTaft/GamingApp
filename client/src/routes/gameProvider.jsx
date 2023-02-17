@@ -9,7 +9,7 @@ export default function GameProvider() {
     useEffect(() => {
         const getGames = async () => {
             const key = "79bd694890ab47a795909bf5e8d434e9"
-            const url = `https://api.rawg.io/api/games?key=${key}&page_size=100&dates=2019-01-01,2022-12-31&ordering=-added`;
+            const url = `https://api.rawg.io/api/games?key=${key}&page_size=100`;
             const options = {
                 method: 'GET',
                 

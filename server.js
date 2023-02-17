@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const sequelize = require('sequelize');
 const models = require('./models');
 const bcrypt = require('bcryptjs');
@@ -8,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const salt = 10;
 const bodyParser = require('body-parser');
 app.use(express.json({ limit: 52428800 }));
+app.use(cors());
 const PORT = process.env.PORT || 3001;
 
 const CLIENT_SECRET = '96665hbpny33kr8iw24m0sei3jeqmt';
@@ -111,6 +113,26 @@ app.get('/api/games', async (req,res) => {
               .then(result => {res.json(result)})
             }
             getGames()
+})
+
+//***************************ADD COMMENTS TO DATABASE***************************//
+app.post('/api/addcomment:game_id', (req, res) => {
+    const comment = req.body.comment
+    const game = req.body.game
+    const game_id = parseInt(req.params.game_id)
+    const user = req.body.user
+    const user_id = parseInt(req.body.user_id)
+    const comments = models.Comments.build({
+        comment: comment,
+        game: game,
+        game_id: game_id,
+        user: user,
+        user_id: user_id,
+    })
+    comments.save()
+        .then(savedComment => {
+            res.json({ success: true })
+        })
 })
 
 app.get('*', (req, res) => {

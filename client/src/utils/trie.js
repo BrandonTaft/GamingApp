@@ -85,7 +85,6 @@
       // for every character in the prefix
       for (let i = 0; i < prefix.length; i++) {
         // make sure prefix actually has words
-        console.log("node.nextLetters[prefix[i]]", prefix[i].toUpperCase())
         if (node.nextLetters[prefix[i]]) {
           node = node.nextLetters[prefix[i]];
         } else if (node.nextLetters[prefix[i].toUpperCase()]) {
