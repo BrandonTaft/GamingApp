@@ -2,14 +2,19 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const db = require("./models");
+const controller = require("./controllers/user.controller");
 const sequelize = require('sequelize');
-const models = require('./models');
+//const models = require('./models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const salt = 10;
-const bodyParser = require('body-parser');
+var corsOptions = {
+    origin: "http://localhost:3000"
+  };
+app.use(cors(corsOptions));
 app.use(express.json({ limit: 52428800 }));
-app.use(cors());
+app.use(express.urlencoded({ extended: true, limit: 52428800 }));
 const PORT = process.env.PORT || 3001;
 
 const CLIENT_SECRET = '96665hbpny33kr8iw24m0sei3jeqmt';
@@ -17,7 +22,29 @@ const CLIENT_ID = 'mfqo27rp6ody572sprriz4y71ywe6f';
 const AUTH_URL = `https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials`
 
 // app.use(express.static(path.resolve(__dirname, './client/build')));
-app.use(bodyParser.urlencoded({ extended: false })) 
+// const run = async () => {
+//     const user = await controller.createUser({
+//         name: "John",
+//         email: "btaft6278@gmail.com",
+//         isLoggedIn: true
+//       });
+// };
+
+db.sequelize.sync();
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and re-sync db.");
+//   run();
+// });
+// db.sequelize.sync()
+//   .then(() => {
+//     console.log("Synced db.");
+//   })
+//   .catch((err) => {
+//     console.log("Failed to sync db: " + err.message);
+//   });
+
+
+
 app.get("/api", (req, res) => {
   res.json({ message: "Hi There!" });
 });
@@ -28,26 +55,26 @@ app.post('/api/register', async (req, res) => {
     console.log(req.body)
   const name = req.body.name
   const password = req.body.password
-  const persistedUser = await models.Users.findOne({
-      where: sequelize.where(
-          sequelize.fn('lower', sequelize.col('name')),
-          sequelize.fn('lower', name)
-      )
-  })
+//   const persistedUser = await models.Users.findOne({
+//       where: sequelize.where(
+//           sequelize.fn('lower', sequelize.col('name')),
+//           sequelize.fn('lower', name)
+//       )
+//   })
+const persistedUser = await controller.findUserByName(name)
   console.log(persistedUser)
   if (persistedUser == null) {
       bcrypt.hash(password, salt, async (error, hash) => {
           if (error) {
               res.json({ message: "Something Went Wrong!!!" })
           } else {
-              const user = models.Users.build({
-                  name: name,
-                  password: hash,
-                  isLoggedIn: false,
-              })
-
-              let savedUser = await user.save()
-              if (savedUser != null) {
+            const user = await controller.createUser({
+                name: name,
+                password: hash,
+                isLoggedIn: false,
+              });
+              //let savedUser = await user.save()
+              if (user != null) {
                   res.json({ success: true })
               }
           }
@@ -116,28 +143,23 @@ app.get('/api/games', async (req,res) => {
 })
 
 //***************************ADD COMMENTS TO DATABASE***************************//
-app.post('/api/addcomment:game_id', (req, res) => {
-    const comment = req.body.comment
-    const game = req.body.game
-    const game_id = parseInt(req.params.game_id)
-    const user = req.body.user
-    const user_id = parseInt(req.body.user_id)
-    const comments = models.Comments.build({
-        comment: comment,
-        game: game,
-        game_id: game_id,
-        user: user,
-        user_id: user_id,
-    })
-    comments.save()
-        .then(savedComment => {
+app.post('/api/addcomment:gameId', async (req, res) => {
+    const userId = parseInt(req.body.userId)
+    const comment = {
+     text: req.body.comment,
+     game: req.body.game,
+     gameId: parseInt(req.params.gameId),
+     name: req.body.user,
+    }
+    const savedComment = await controller.createComment(userId, comment)
+        if(savedComment) {
             res.json({ success: true })
-        })
+        }
 })
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+// });
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);

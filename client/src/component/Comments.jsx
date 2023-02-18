@@ -1,14 +1,26 @@
 import { useState } from "react";
 
 export default function Comments() {
-    const [newComment, setNewComment] = useState()
+    const [newComment, setNewComment] = useState();
+    const [savedComments, setSavedComments] = useState();
+
+    const getComments = async () => {
+      const gameId = 1
+      const response = await fetch(
+        `http://127.0.0.1:3001/api/comments/${gameId}`
+      );
+      const comments = await response.json();
+      setSavedComments(comments);
+  }
+  
+
     const handleComment = (event) => {
         setNewComment({
             [event.target.name]: event.target.value,
             game: "game",
-            game_id:"game_id",
+            gameId:"gameId",
             user:"user",
-            user_id: "5",
+            userId: "1",
         })
       }
     
@@ -32,6 +44,7 @@ export default function Comments() {
         <div className="comment-container">
             <input  type="text" name="comment" onChange={handleComment} placeholder="Enter Comment" autoComplete='off'/>
         <button type='submit' onClick={() => postComment()} >Submit</button>
+        {savedComments}
         </div>
     )
 }
