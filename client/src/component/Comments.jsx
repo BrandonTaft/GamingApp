@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Comments() {
     const [newComment, setNewComment] = useState();
     const [savedComments, setSavedComments] = useState();
-
+  useEffect(() => {
     const getComments = async () => {
       const gameId = 1
       const response = await fetch(
@@ -11,9 +11,10 @@ export default function Comments() {
       );
       const comments = await response.json();
       setSavedComments(comments);
-  }
-  
-
+      console.log(comments)
+  }  
+getComments()
+}, [])
     const handleComment = (event) => {
         setNewComment({
             [event.target.name]: event.target.value,
@@ -25,7 +26,7 @@ export default function Comments() {
       }
     
     const postComment = () => {
-        fetch(`http://127.0.0.1:3001/api/addcomment${1}`, {
+        fetch(`http://127.0.0.1:3001/api/addcomment${2}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -39,12 +40,12 @@ export default function Comments() {
             }
           })
       }
-    
+
     return(
         <div className="comment-container">
             <input  type="text" name="comment" onChange={handleComment} placeholder="Enter Comment" autoComplete='off'/>
         <button type='submit' onClick={() => postComment()} >Submit</button>
-        {savedComments}
+       
         </div>
     )
 }
