@@ -1,7 +1,5 @@
 const db = require("../models");
 const User = db.users;
-const Comment = db.comments;
-const Op = db.Sequelize.Op;
 const sequelize = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -24,8 +22,7 @@ function findUserByName(name) {
 };
 
 exports.createRegisteredUser = async (req, res) => {
-    const name = req.body.name
-    const password = req.body.password
+    const { name, password } = req.body
     const persistedUser = await findUserByName(name)
     if (persistedUser === null) {
         bcrypt.hash(password, salt, async (error, hash) => {
@@ -48,8 +45,7 @@ exports.createRegisteredUser = async (req, res) => {
 }
 
 exports.findRegisteredUser = async (req, res) => {
-    const name = req.body.name
-    const password = req.body.password
+    const { name, password } = req.body
     let user = await findUserByName(name)
     if (user != null) {
         bcrypt.compare(password, user.password, (error, result) => {
@@ -77,30 +73,74 @@ exports.findUserComments = (req, res) => {
             res.json(user);
         })
         .catch((err) => {
-            console.log(">> Error while finding user: ", err);
+            console.log(">> Error while finding user comments: ", err);
+            res.json({
+                message: ">> Error while finding user comments: ", err
+            });
         });
 };
 
-// exports.updateUser = (userId) => {
-//     return User.update
-// }
+exports.updateUserPassword = (req, res) => {
+    const id = req.params.id;
+    const newPassword = req.body.newPassword
+    console.log("req.body.password", req.body.newPassword)
+    const password = newPassword ? newPassword : User.password
+    bcrypt.hash(password, salt, async (error, hash) => {
+        if (error) {
+            res.json({ message: "Something Went Wrong! Please Try Again" })
+        } else {
+            return User.update(
+                {
+                    password: hash,
+                },
+                { where: { id: id } }
+            ).then(num => {
+                if (num == 1) { res.json({ message: "Password was updated successfully." });
+                } else {
+                  res.json({ message: 'Cannot update Password' });
+                }
+              })
+              .catch(err => {
+                res.status(500).json({ message: "Error updating Password" });
+              });
+        }
+    })
 
-exports.findAllUsers = () => {
+}
+
+exports.findAllLoggedInUsers = (req, res) => {
     return User.findAll({
-        include: ["comments"],
+        where: {
+            isLoggedIn: true
+        }
     }).then((users) => {
-        return users;
+        res.json(users)
     });
 };
 
-
-//Get the comments for a given user id
-exports.findAllCommentsByUserId = (id) => {
-    return Comment.findByPk(id, { include: ["user"] })
-        .then((comment) => {
-            return comment;
-        })
-        .catch((err) => {
-            console.log(">> Error while finding comment: ", err);
-        });
+exports.findUserById = (req, res) => {
+    return User.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then((user) => {
+        res.json(user)
+    });
 };
+
+exports.deleteUser = (req, res) => {
+    User.destroy({
+      where: { id: req.params.id }
+    })
+      .then(num => {
+        console.log(num)
+        if (num == 1) {
+          res.json({ message: "User was deleted successfully!" });
+        } else {
+          res.json({ message: 'User was not found!' });
+        }
+      })
+      .catch(err => {
+        res.status(500).json({ message: "Could not delete User with id=" + id });
+      });
+  };

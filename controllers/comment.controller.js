@@ -1,33 +1,11 @@
 const db = require("../models");
-const User = db.users;
 const Comment = db.comments;
-const Op = db.Sequelize.Op;
-const sequelize = require('sequelize');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const salt = 10;
-
-
-
-// // Get comments posted by given user
-// exports.findUserComments = (req, res) => {
-//     const userId = req.params.id;
-//     return User.findByPk(userId, { include: ["comments"] })
-//         .then((user) => {
-//             res.json(user);
-//         })
-//         .catch((err) => {
-//             console.log(">> Error while finding user: ", err);
-//         });
-// };
-
-
 
 exports.createComment = (req, res) => {
     return Comment.create({
         text: req.body.comment,
         game: req.body.game,
-        gameId: parseInt(req.params.gameId),
+        gameId: req.body.gameId,
         name: req.body.user,
         userId: parseInt(req.body.userId),
     })
@@ -37,22 +15,53 @@ exports.createComment = (req, res) => {
         })
         .catch((err) => {
             console.log(">> Error while creating comment: ", err);
+            res.json({ message:">> Error while creating comment: " });
         });
 };
 
 //Get the comments for a given user id
 exports.findAllCommentsByGameId = (req, res) => {
-    console.log()
     return Comment.findAll({
         where: {
             gameId: req.params.id,
         }
     })
         .then((comment) => {
-            console.log(comment)
             res.json(comment)
+        })
+        .catch(err => {
+            console.log(err || "Some error occurred while retrieving comments.")
+            res.json({ message: "Some error occurred while retrieving comments." });
+          });
+};
+
+//Get the comments for a given user id
+exports.findAllCommentsByUserId = (req, res) => {
+    return Comment.findByPk(id, { include: ["user"] })
+        .then((comments) => {
+            res.json(comments)
         })
         .catch((err) => {
             console.log(">> Error while finding comment: ", err);
+            res.json({ message: ">> Error while finding comment: " });
         });
 };
+
+exports.deleteCommentById = (req, res) => {
+    Comment.destroy({
+        where : {
+            id: req.params.id
+        }
+    })
+    .then(num => {
+        console.log(num)
+        if (num == 1) {
+          res.json({ message: "Comment was deleted successfully!" });
+        } else {
+          res.json({ message: 'Comment was not found!' });
+        }
+      })
+      .catch(err => {
+        res.status(500).json({ message: "Could not delete Comment" });
+      });
+}

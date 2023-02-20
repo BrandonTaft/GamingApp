@@ -9,24 +9,19 @@
     // User Login
     router.post('/login', users.findRegisteredUser);
 
+    // Retrieve all comments by a user
+    router.get("/user-comments/:id", users.findUserComments);
+
+    // Update a Password with user id
+    router.put("/user-update/:id", users.updateUserPassword);
     
-    
-    // // Retrieve all users
-    // router.get("/", users.findAll);
+    // Retrieve all logged in users
+    router.get("/users", users.findAllLoggedInUsers);
   
-    // // Retrieve all published users
-    // router.get("/published", users.findAllPublished);
+    // Retrieve a single User with id
+    router.get("/profile/:id", users.findUserById);
   
-    // // Retrieve a single User with id
-    // router.get("/:id", users.findOne);
-  
-    // // Update a User with id
-    // router.put("/:id", users.update);
-  
-    // // Delete a User with id
-    // router.delete("/:id", users.delete);
-  
-    // // Create a new User
-    // router.delete("/", users.deleteAll);
+    // Delete a User with id
+    router.delete("/profile/:id", users.deleteUser);
   
     module.exports = router
