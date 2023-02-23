@@ -5,25 +5,15 @@ export default function Comments() {
     const [savedComments, setSavedComments] = useState();
     const gameId = 3
   useEffect(() => {
-  //   const getComments = async () => {
-  //     const gameId = 2
-  //     const response = await fetch(
-  //       `/api/comments/${gameId}`
-  //     );
-  //     const comments = await response.json();
-  //     setSavedComments(comments);
-  //     console.log(comments)
-  // }  
-  const getComments = async () => {
-    const userId = 12
-    const newPassword = "newPassword"
-    const response = await fetch(`/igdb/games`,{
-      method: 'POST'
-    } );
-    const comments = await response.json();
-    setSavedComments(comments);
-    console.log(comments)
-}  
+    const getComments = async () => {
+      const response = await fetch(
+        `/api/comments/${gameId}`
+      );
+      const comments = await response.json();
+      setSavedComments(comments);
+      console.log(comments)
+  }  
+  
 getComments()
 }, [])
     const handleComment = (event) => {
@@ -56,7 +46,6 @@ getComments()
         <div className="comment-container">
             <input  type="text" name="comment" onChange={handleComment} placeholder="Enter Comment" autoComplete='off'/>
         <button type='submit' onClick={() => postComment()} >Submit</button>
-       
         </div>
     )
 }

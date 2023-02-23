@@ -6,7 +6,6 @@ export default function SearchBar({ games }) {
   const [trie, setTrie] = useState();
   const [cached, setCached] = useState(false)
   const [suggestedWords, setSuggestedWords] = useState([]);
-  const [screenshot, setScreenshot] = useState("")
   const cursor = useRef(0);
 
 
@@ -50,7 +49,6 @@ export default function SearchBar({ games }) {
       setSuggestedWords([])
       if(selectedGame){
       e.target.value = selectedGame.innerHTML.valueOf()
-      setScreenshot(games[1].background_image)
       }
     }
   }
@@ -77,7 +75,6 @@ export default function SearchBar({ games }) {
       <div className="search-list">
         {suggestedWordList}
       </div>
-      <img src={screenshot}/>
     </div>
   )
 }

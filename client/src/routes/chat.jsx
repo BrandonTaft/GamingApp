@@ -2,7 +2,7 @@ import { useOutletContext } from "react-router-dom";
 import SearchBar from "../component/SearchBar";
 
 export default function Chat() {
-    const [ games, setGames ] = useOutletContext()
+    const [ games ] = useOutletContext()
   
    console.log(games)
 return (

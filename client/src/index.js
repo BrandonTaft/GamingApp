@@ -11,42 +11,60 @@ import PrivateRoutes from "./routes/auth";
 import ProfilePage from "./routes/profile-page";
 import Register from "./routes/register";
 import Chat from "./routes/chat";
+import PendingElement from "./component/PendingElement";
+import Game from "./component/Game";
 
 
 const router = createBrowserRouter([
   {
     element: <GameProvider />,
-    children: [
-  {
-    element: <Layout />,
-    errorElement: <ErrorPage />,
+    loader: async () => {
+      const response = await fetch(`/igdb/games`)
+      const games = await response.json()
+      return games
+    },
+    shouldRevalidate: () => false,
     children: [
       {
+        element: <Layout />,
         path: "/",
-        element: <PublicPage />,
-        //loader: gameLoader,
-        // loader: async () => {
-        //   let isLoaded = localStorage.getItem('loaded')
-        //   gameLoader(isLoaded)
-        // },
-      },
-      {
-        path: "/chat",
-        element: <Chat />
-      },
-      {
-        element: <PrivateRoutes />,
+        errorElement: <ErrorPage />,
         children: [
           {
-            path: "profile",
-            element: <ProfilePage />
-          }
+            path: "/feed",
+            element: <PublicPage />,
+            children: [
+              {
+                path: "game/:gameId",
+                element: <Game />,
+                pendingElement: <PendingElement />,
+                loader: async ({ params }) => {
+
+                  const response = await fetch(`/igdb/game/:${params.gameId}`)
+                  const game = await response.json()
+                  return game
+                }
+              }
+            ]
+          },
+          {
+            path: "/chat",
+            element: <Chat />,
+
+          },
+          {
+            element: <PrivateRoutes />,
+            children: [
+              {
+                path: "profile",
+                element: <ProfilePage />
+              }
+            ],
+          },
         ],
       },
-    ],
+    ]
   },
-]
-},
   {
     path: "login",
     element: <Login />,
@@ -55,7 +73,7 @@ const router = createBrowserRouter([
   {
     path: "register",
     element: <Register />,
-     errorElement: <ErrorPage />
+    errorElement: <ErrorPage />
   }
 
 ]);
