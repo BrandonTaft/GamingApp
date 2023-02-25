@@ -22,6 +22,7 @@ function PublicPage() {
                     }
                   >
                     {game.name}
+                    <p>{new Date(game.first_release_date * 1000).toLocaleDateString()}</p>
                     {game.cover
                     ?
                     <img src={`https://images.igdb.com/igdb/image/upload/t_cover_small_2x/${game.cover.image_id}.jpg`} />
@@ -39,7 +40,6 @@ function PublicPage() {
                 <h1>Games</h1>
                 <Comments />
                 <SearchBar games={games} />
-
                 <div>
                     {gameList}
                 </div>

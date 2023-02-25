@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router-dom"
 
 export default function Game() {
     const game = useLoaderData()
-    console.log(game)
+    console.log("GAME",game)
     return(
         <>
         <div>{game[0].name}</div>

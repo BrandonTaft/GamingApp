@@ -1,6 +1,7 @@
 const axios = require('axios');
 const apicalypse = require('apicalypse').default;
 router = require("express").Router();
+const games = require("../controllers/game.controller.js");
 
 const CLIENT_SECRET = '96665hbpny33kr8iw24m0sei3jeqmt';
 const CLIENT_ID = 'mfqo27rp6ody572sprriz4y71ywe6f';
@@ -24,8 +25,12 @@ const AUTH_URL = `https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&clien
                         'Authorization': `Bearer ${authToken}`
             }
                     })
-            .fields([ 'name', 'cover.*', 'summary', 'first_release_date', 'total_rating', 'rating_count', 'screenshots.*'])
-            .where(['total_rating > 80'])
+            .fields([
+                'name', 'cover.*', 'genres', 'follows',
+                'platforms', 'url', 'videos.*', 'summary',
+                'first_release_date', 'total_rating', 'total_rating_count'
+            ])
+            .where(['total_rating_count > 80'])
             //.search('Smash')
             //.query('name', 'name = smash')
             .limit(50)
@@ -33,6 +38,9 @@ const AUTH_URL = `https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&clien
             .sort('total_rating', 'desc')
             .request('https://api.igdb.com/v4/games');
         res.json(response.data);
+        for(let i = 0; i < response.data.length; i++){
+            games.createGame(response.data[i])
+        }
         }
         getGames()
     })
@@ -55,9 +63,14 @@ const AUTH_URL = `https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&clien
                         'Authorization': `Bearer ${authToken}`
             }
                     })
-            .fields([ 'name', 'cover.*', 'summary', 'first_release_date', 'total_rating', 'rating_count', 'screenshots.*'])
+                    .fields([
+                        'name', 'cover.*', 'genres', 'follows',
+                        'platforms', 'url', 'videos.*', 'summary',
+                        'first_release_date', 'total_rating', 'total_rating_count'
+                    ])
             .where(`id = ${gameId}`)
             .request('https://api.igdb.com/v4/games');
+            console.log(response.data[0].genres.toString())
         res.json(response.data);
         }
         getOneGame()
