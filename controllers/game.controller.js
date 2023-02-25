@@ -22,7 +22,6 @@ exports.findUserComments = (req, res) => {
 };
 
 exports.createGame = (game) => {
-    console.log("CONTROLLER", game.platforms)
     return Game.create({
         name: game.name,
         cover: game.cover.url,
@@ -30,18 +29,17 @@ exports.createGame = (game) => {
         follows: game.follows,
         platforms: game.platforms,
         url: game.url,
-        // videos: game.videos[0].video_id || "",
-       summary: game.summary,
-       release_date: game.first_release_date,
-       rating: game.total_rating,
-       rating_count: game.total_rating_count
+        summary: game.summary,
+        release_date: game.first_release_date,
+        rating: game.total_rating,
+        rating_count: game.total_rating_count
     })
         .then((game) => {
-            console.log(">> Created Game: " + JSON.stringify(game, null, 4));
+            console.log(">> Created Game: " + JSON.stringify(game.name, null, 4));
             // res.json({ success: true })
         })
         .catch((err) => {
             console.log(">> Error while creating game: ", err);
-           // res.json({ message:">> Error while creating game: " });
+            // res.json({ message:">> Error while creating game: " });
         });
 };
