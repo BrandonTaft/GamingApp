@@ -39,8 +39,7 @@ const router = createBrowserRouter([
                 element: <Game />,
                 pendingElement: <PendingElement />,
                 loader: async ({ params }) => {
-
-                  const response = await fetch(`/igdb/game/:${params.gameId}`)
+                  const response = await fetch(`/igdb/game/${params.gameId}`)
                   const game = await response.json()
                   return game
                 }

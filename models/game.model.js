@@ -1,5 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
     const Game = sequelize.define("game", {
+        igdb_id: {
+            type: Sequelize.INTEGER
+        },
         name: {
             type: Sequelize.STRING
         },
@@ -19,7 +22,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         videos: {
-            type: Sequelize.ARRAY(Sequelize.STRING)
+            type: Sequelize.STRING
         },
         summary: {
             type: Sequelize.TEXT
