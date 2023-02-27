@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from "react"
 import { Outlet, NavLink, useOutletContext } from "react-router-dom";
-import GameList from "../component/GameList";
+import GameCard from "../component/GameCard";
+import SideBar from "../component/SideBar";
 import "../style/App.css";
 
 function PublicPage() {
@@ -10,14 +11,13 @@ function PublicPage() {
 
 
     return (
-        <div className="games">
-            <div className="game-list">
-                <GameList />
-            </div>
-            <div className="game-display">
-                <Outlet />
-            </div>
-
+        <div className="flex">
+            <div className="flex basis-1/4">
+        <SideBar games={games} />
+        </div>
+        <div className="flex basis-3/4 flex-wrap">
+            <GameCard games={games} />
+        </div>
         </div>
     )
 }

@@ -6,14 +6,13 @@ import Navbar from "../component/Navbar";
 
 
 export default function Layout() {
-  const [ games ] = useOutletContext()
   return (
-    <div>
+    <>
       <Navbar />
       <div className="content">
-      <Outlet context={[games]} />
+      <Outlet />
       </div>
       <Footer />
-    </div>
+    </>
   )
 }

@@ -1,42 +1,43 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./style/App.css";
 import Layout from "./routes/layout";
 import ErrorPage from "./routes/error-page";
 import GameProvider from "./routes/gameProvider";
 import Login from "./routes/login";
-import PublicPage from "./routes/public-page";
+import HomePage from "./routes/home-page";
+import GameCard from "./component/GameCard";
 import PrivateRoutes from "./routes/auth";
 import ProfilePage from "./routes/profile-page";
 import Register from "./routes/register";
 import Chat from "./routes/chat";
 import PendingElement from "./component/PendingElement";
 import Game from "./component/Game";
+import SideBar from "./component/SideBar";
 
 
 const router = createBrowserRouter([
   {
-    element: <GameProvider />,
-    loader: async () => {
-      const response = await fetch(`/igdb/games`)
-      const games = await response.json()
-      return games
-    },
-    shouldRevalidate: () => false,
+    element: <Layout />,
     children: [
       {
-        element: <Layout />,
-        path: "/",
-        errorElement: <ErrorPage />,
+        element: <GameProvider />,
+        loader: async () => {
+          const response = await fetch(`/igdb/games`)
+          const games = await response.json()
+          return games
+        },
+        shouldRevalidate: () => false,
         children: [
           {
-            path: "/feed",
-            element: <PublicPage />,
+            path: "/",
+            element: <HomePage />,
+            errorElement: <ErrorPage />,
             children: [
               {
                 path: "game/:gameId",
                 element: <Game />,
+                errorElement: <ErrorPage />,
                 pendingElement: <PendingElement />,
                 loader: async ({ params }) => {
                   const response = await fetch(`/igdb/game/${params.gameId}`)
@@ -49,14 +50,15 @@ const router = createBrowserRouter([
           {
             path: "/chat",
             element: <Chat />,
-
+            errorElement: <ErrorPage />,
           },
           {
             element: <PrivateRoutes />,
             children: [
               {
                 path: "profile",
-                element: <ProfilePage />
+                element: <ProfilePage />,
+                errorElement: <ErrorPage />,
               }
             ],
           },
